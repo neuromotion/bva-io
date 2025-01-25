@@ -92,6 +92,14 @@ try
 catch
 end
 EEG.comments = ['Original file: ' hdr.commoninfos.datafile];
+[~, og_name, og_ext] = fileparts(hdr.commoninfos.datafile);
+[~, new_name, ~] = fileparts(hdrfile);
+if ~strcmp(new_name, og_name)
+    warning("EEG Experiment has been renamed, will instead search for renamed files!")
+    hdr.commoninfos.datafile = strcat(new_name, og_ext);
+    [~, ~, mkr_ext] = fileparts(hdr.commoninfos.markerfile);
+    hdr.commoninfos.markerfile = strcat(new_name, mkr_ext);
+end    
 hdr.commoninfos.numberofchannels = str2double(hdr.commoninfos.numberofchannels);
 EEG.srate = 1000000 / str2double(hdr.commoninfos.samplinginterval);
 
@@ -389,6 +397,7 @@ if isfield(hdr.commoninfos, 'markerfile')
             MRK = [];
         end
     end
+    MRK.commoninfos.datafile = strcat(new_name, og_ext);
     if ~isempty(MRK) && ~isequal(hdr.commoninfos.datafile, MRK.commoninfos.datafile)
         disp('pop_loadbv() warning: data files in header and marker files inconsistent.');
     end

@@ -145,6 +145,7 @@ if isfield(hdr, 'channelinfos')
 end
 %     [EEG.chanlocs.type] = deal([]);
 
+ismatlab = true;
 % Coordinates
 if isfield(hdr, 'coordinates')
     hdr.coordinates(end+1:length(chans)) = { [] };
